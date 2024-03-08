@@ -28,7 +28,6 @@ Windows build was cross-compiled from Linux.
 
 - Larger field sizes will be slower to be redrawn
 - When playing custom difficulty, the game will be softlocked after the first click if the number of safe spaces is too little compared to the available cells (eg. 10x10 board with 99 mines)
-- Flag count wasn't updated properly when flags was removed after clicking on a zero cell
 
 ## Custom Difficulty
 
