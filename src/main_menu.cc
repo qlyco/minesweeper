@@ -19,7 +19,8 @@ int show_main_menu() {
     std::vector<std::string> menu_items = {
         " Beginner        ",
         " Intermediate    ",
-        " Expert          "
+        " Expert          ",
+        " Exit            "
     };
 
     while (input != 10) {
@@ -61,7 +62,7 @@ void redraw_main_menu(std::vector<std::string> *menu_items, int selected) {
 
     mvprintw(selected + 4, 1, ">");
 
-    mvprintw(8, 1, "(C)2024, QLYCO / dfx.");
+    mvprintw(9, 1, "(C)2024, QLYCO / dfx.");
 
     wrefresh(stdscr);
 }

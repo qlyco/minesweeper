@@ -23,6 +23,7 @@ void _redraw(Minefield *play_area, std::vector<int> *revealed);
 void _draw_cursor(int x, int y);
 int _flood_fill(int x, int y, Minefield *play_area, std::vector<int> *revealed);
 int _quick_reveal(int *x, int *y, Minefield *play_area, std::vector<int> *revealed);
+int _count_flags(std::vector<int> *revealed);
 
 int play(Minefield *play_area)
 {
@@ -31,7 +32,7 @@ int play(Minefield *play_area)
     init_pair(MINE_CLR, COLOR_RED, COLOR_BLACK);
     init_pair(FLAG_CLR, COLOR_MAGENTA, COLOR_BLACK);
     init_pair(CURS_CLR, COLOR_GREEN, COLOR_BLACK);
-    init_pair(WALL_CLR, COLOR_WHITE, COLOR_WHITE);
+    init_pair(WALL_CLR, COLOR_YELLOW, COLOR_BLACK);
 
     std::vector<int> revealed(play_area->width * play_area->height, -1);
 
@@ -52,10 +53,12 @@ int play(Minefield *play_area)
     {
         _redraw(play_area, &revealed);
         _draw_cursor(x, y);
-        mvprintw(play_area->height + 3, 1, "BOMBS: %-3d | FLAGS: %-3d", play_area->mines, flags);
-        input = getch();
-
+        wattron(stdscr, COLOR_PAIR(WALL_CLR));
+        mvprintw(play_area->height + 1, 2, "BOMBS: %-3d | FLAGS: %-3d", play_area->mines, flags);
+        wattroff(stdscr, COLOR_PAIR(WALL_CLR));
         wrefresh(stdscr);
+
+        input = getch();
 
         switch (input)
         {
@@ -83,6 +86,8 @@ int play(Minefield *play_area)
             if (x >= play_area->width)
                 x = 0;
             break;
+        case 'x':
+        case 'l':
         case 10: // ENTER
             if (first_click)
             {
@@ -109,13 +114,17 @@ int play(Minefield *play_area)
                 std::fill(revealed.begin(), revealed.end(), 0);
                 _redraw(play_area, &revealed);
                 _draw_cursor(x, y);
-                mvprintw(play_area->height + 3, 1, "GAME OVER");
+                wattron(stdscr, COLOR_PAIR(WALL_CLR));
+                mvprintw(play_area->height + 1, 2, "GAME OVER");
+                wattroff(stdscr, COLOR_PAIR(WALL_CLR));
+
                 wrefresh(stdscr);
                 getch();
             }
             else if (play_area->field[x + y * play_area->width] == ' ')
             {
                 not_mines += _flood_fill(x, y, play_area, &revealed);
+                flags = _count_flags(&revealed);
             }
             else
             {
@@ -134,7 +143,10 @@ int play(Minefield *play_area)
                         std::fill(revealed.begin(), revealed.end(), 0);
                         _redraw(play_area, &revealed);
                         _draw_cursor(x, y);
-                        mvprintw(play_area->height + 3, 1, "GAME OVER");
+                        wattron(stdscr, COLOR_PAIR(WALL_CLR));
+                        mvprintw(play_area->height + 1, 2, "GAME OVER");
+                        wattroff(stdscr, COLOR_PAIR(WALL_CLR));
+                        
                         wrefresh(stdscr);
                         getch();
                     } else {
@@ -144,6 +156,9 @@ int play(Minefield *play_area)
             }
 
             break;
+        case 'z':
+        case 'k':
+        case KEY_BACKSPACE:
         case 32:
             if (revealed[x + y * play_area->width] == -1) {
                 revealed[x + y * play_area->width] = 1;
@@ -166,7 +181,10 @@ int play(Minefield *play_area)
             win = 1;
             std::fill(revealed.begin(), revealed.end(), 2);
             _redraw(play_area, &revealed);
-            mvprintw(play_area->height + 3, 1, "YOU WIN!");
+            wattron(stdscr, COLOR_PAIR(WALL_CLR));
+            mvprintw(play_area->height + 1, 2, "YOU WIN!");
+            wattroff(stdscr, COLOR_PAIR(WALL_CLR));
+
             wrefresh(stdscr);
             getch();
         }
@@ -181,14 +199,14 @@ void _redraw(Minefield *play_area, std::vector<int> *revealed)
 
     for (int i = 0; i < play_area->width * 3 + 2; i++) {
         attron(COLOR_PAIR(WALL_CLR));
-        mvaddch(0, i, '#');
+        mvaddch(0, i, ACS_HLINE);
         attroff(COLOR_PAIR(WALL_CLR));
     }
 
     for (int y = 0; y < play_area->height; y++)
     {
         attron(COLOR_PAIR(WALL_CLR));
-        mvaddch(y + 1, 0, '#');
+        mvaddch(y + 1, 0, ACS_VLINE);
         attroff(COLOR_PAIR(WALL_CLR));
 
         for (int x = 0; x < play_area->width; x++)
@@ -235,17 +253,22 @@ void _redraw(Minefield *play_area, std::vector<int> *revealed)
         }
 
         attron(COLOR_PAIR(WALL_CLR));
-        mvaddch(y + 1, play_area->width * 3 + 1, '#');
+        mvaddch(y + 1, play_area->width * 3 + 1, ACS_VLINE);
         attroff(COLOR_PAIR(WALL_CLR));
     }
 
     for (int i = 0; i < play_area->width * 3 + 2; i++) {
         attron(COLOR_PAIR(WALL_CLR));
-        mvaddch(play_area->height + 1, i, '#');
+        mvaddch(play_area->height + 1, i, ACS_HLINE);
         attroff(COLOR_PAIR(WALL_CLR));
     }
 
-    wrefresh(stdscr);
+    attron(COLOR_PAIR(WALL_CLR));
+    mvaddch(0, 0, ACS_ULCORNER);
+    mvaddch(0, play_area->width * 3 + 1, ACS_URCORNER);
+    mvaddch(play_area->height + 1, 0, ACS_LLCORNER);
+    mvaddch(play_area->height + 1, play_area->width * 3 + 1, ACS_LRCORNER);
+    attroff(COLOR_PAIR(WALL_CLR));
 }
 
 void _draw_cursor(int x, int y)
@@ -254,7 +277,6 @@ void _draw_cursor(int x, int y)
     mvaddch(y + 1, x * 3 + 1, '[');
     mvaddch(y + 1, x * 3 + 3, ']');
     attroff(COLOR_PAIR(CURS_CLR));
-    wrefresh(stdscr);
 }
 
 int _flood_fill(int start_x, int start_y, Minefield *play_area, std::vector<int> *revealed)
@@ -355,4 +377,16 @@ int _quick_reveal(int *x, int *y, Minefield *play_area, std::vector<int> *reveal
     }
 
     return shown;
+}
+
+int _count_flags(std::vector<int> *revealed) {
+    int flags = 0;
+
+    for (int i : *revealed) {
+        if (i == 1) {
+            ++flags;
+        }
+    }
+
+    return flags;
 }

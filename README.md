@@ -44,14 +44,14 @@ Run the app with the following commandline arguments: ```minesweeper -D 3 -W [wi
 Linux build is easy to compile. We recommend WSL if you're on Windows:
 - Make sure ```ncurses``` is installed.
 - Make sure ```g++``` is installed.
-- Run ```make build```.
+- Run ```make build-linux```.
 - Run the built executable in ```bin```.
 
 ### Windows
 
 Windows build need to be cross-compiled from Linux and is more complicated. WSL is recommended:
-- Download and build ```pdcurses```.
-- Place ```libpdcurses.a``` and all related headers in a common directory, separating them into ```lib``` and ```include``` sub-directory.
+- Prebuilt ```pdcurses``` is already included as ```libpdcurses.a```.
+  - To build from platforms other than Linux, you need to rebuild ```pdcurses``` from [source](https://pdcurses.org/).
 - Make sure ```mingw-w64``` is installed.
-- Run ```make build-win PDCURSES_PATH=[path]```, replacing the ```[path]``` with the directory path where you stored the built ```pdcurses```.
+- Run ```make build-win```.
 - Run the built executable in ```bin```.
