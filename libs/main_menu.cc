@@ -1,4 +1,11 @@
+#ifndef TARGET_WIN32
 #include <ncurses.h>
+#endif
+
+#ifdef TARGET_WIN32
+#include "curses.h"
+#endif
+
 #include <unistd.h>
 #include <string>
 #include <vector>
@@ -23,11 +30,11 @@ int show_main_menu() {
             case KEY_UP:
                 --selected;
                 if (selected < 0)
-                    selected = menu_items.size() - 1;
+                    selected =  (int) menu_items.size() - 1;
                 break;
             case KEY_DOWN:
                 ++selected;
-                if (selected >= menu_items.size())
+                if (selected >= (int) menu_items.size())
                     selected = 0;
                 break;
             default:
@@ -42,7 +49,7 @@ void redraw_main_menu(std::vector<std::string> *menu_items, int selected) {
     clear();
     mvprintw(1, 1, "QLYCOWorks's MINESWEEPER");
     mvprintw(3, 1, "Difficulty:");
-    for (int i = 0; i < menu_items->size(); i++) {
+    for (int i = 0; i < (int) menu_items->size(); i++) {
         if (i == selected) {
             wattron(stdscr, A_STANDOUT);
             mvprintw(i + 4, 3, (*menu_items)[i].c_str());

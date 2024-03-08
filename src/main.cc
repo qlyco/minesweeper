@@ -1,4 +1,10 @@
+#ifndef TARGET_WIN32
 #include <ncurses.h>
+#endif
+
+#ifdef TARGET_WIN32
+#include "curses.h"
+#endif
 
 #include <cstdlib>
 #include <stdio.h>
@@ -9,7 +15,7 @@
 #include "cli_parser.hh"
 #include "main_menu.hh"
 #include "minefield.hh"
-#include <game.hh>
+#include "game.hh"
 
 int main(int argc, char *argv[])
 {
@@ -70,7 +76,9 @@ int main(int argc, char *argv[])
         {
             const char *width = options["WIDTH"].c_str();
             play_area.width = strtol(width, nullptr, 10);
-        } else {
+        }
+        else
+        {
             diff = -1;
             break;
         }
@@ -79,7 +87,9 @@ int main(int argc, char *argv[])
         {
             const char *seed = options["HEIGHT"].c_str();
             play_area.height = strtol(seed, nullptr, 10);
-        } else {
+        }
+        else
+        {
             diff = -1;
             break;
         }
@@ -88,12 +98,15 @@ int main(int argc, char *argv[])
         {
             const char *seed = options["MINES"].c_str();
             play_area.mines = strtol(seed, nullptr, 10);
-        } else {
+        }
+        else
+        {
             diff = -1;
             break;
         }
 
-        if (play_area.width * play_area.height <= play_area.mines || play_area.width < 9 || play_area.height < 9 || play_area.mines <= 0) {
+        if (play_area.width * play_area.height <= play_area.mines || play_area.width < 9 || play_area.height < 9 || play_area.mines <= 0)
+        {
             diff = -1;
             break;
         }
@@ -109,9 +122,12 @@ int main(int argc, char *argv[])
         clear();
         endwin();
 
-        if (result == 0) {
+        if (result == 0)
+        {
             printf("You lose.\n");
-        } else {
+        }
+        else
+        {
             printf("You win!\n");
         }
     }

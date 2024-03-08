@@ -1,5 +1,13 @@
-#include "minefield.hh"
+#ifndef TARGET_WIN32
 #include <ncurses.h>
+#endif
+
+#ifdef TARGET_WIN32
+#include "curses.h"
+#endif
+
+#include "minefield.hh"
+
 #include <vector>
 #include <deque>
 
