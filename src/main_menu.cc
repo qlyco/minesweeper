@@ -53,10 +53,10 @@ void redraw_main_menu(std::vector<std::string> *menu_items, int selected) {
     for (int i = 0; i < (int) menu_items->size(); i++) {
         if (i == selected) {
             wattron(stdscr, A_STANDOUT);
-            mvprintw(i + 4, 3, (*menu_items)[i].c_str());
+            mvprintw(i + 4, 3, "%s", (*menu_items)[i].c_str());
             wattroff(stdscr, A_STANDOUT);
         } else {
-            mvprintw(i + 4, 3, (*menu_items)[i].c_str());
+            mvprintw(i + 4, 3, "%s", (*menu_items)[i].c_str());
         }
     }
 

@@ -19,11 +19,11 @@
 #define CURS_CLR 5
 #define WALL_CLR 6
 
-void _redraw(Minefield *play_area, std::vector<int> *revealed);
-void _draw_cursor(int x, int y);
-int _flood_fill(int x, int y, Minefield *play_area, std::vector<int> *revealed);
-int _quick_reveal(int *x, int *y, Minefield *play_area, std::vector<int> *revealed);
-int _count_flags(std::vector<int> *revealed);
+void redraw(Minefield *play_area, std::vector<int> *revealed);
+void draw_cursor(int x, int y);
+int flood_fill(int x, int y, Minefield *play_area, std::vector<int> *revealed);
+int quick_reveal(int *x, int *y, Minefield *play_area, std::vector<int> *revealed);
+int count_flags(std::vector<int> *revealed);
 
 int play(Minefield *play_area)
 {
@@ -51,8 +51,8 @@ int play(Minefield *play_area)
 
     while (!ended)
     {
-        _redraw(play_area, &revealed);
-        _draw_cursor(x, y);
+        redraw(play_area, &revealed);
+        draw_cursor(x, y);
         wattron(stdscr, COLOR_PAIR(WALL_CLR));
         mvprintw(play_area->height + 1, 2, "BOMBS: %-3d | FLAGS: %-3d", play_area->mines, flags);
         wattroff(stdscr, COLOR_PAIR(WALL_CLR));
@@ -112,8 +112,8 @@ int play(Minefield *play_area)
             {
                 ended = true;
                 std::fill(revealed.begin(), revealed.end(), 0);
-                _redraw(play_area, &revealed);
-                _draw_cursor(x, y);
+                redraw(play_area, &revealed);
+                draw_cursor(x, y);
                 wattron(stdscr, COLOR_PAIR(WALL_CLR));
                 mvprintw(play_area->height + 1, 2, "GAME OVER");
                 wattroff(stdscr, COLOR_PAIR(WALL_CLR));
@@ -123,8 +123,8 @@ int play(Minefield *play_area)
             }
             else if (play_area->field[x + y * play_area->width] == ' ')
             {
-                not_mines += _flood_fill(x, y, play_area, &revealed);
-                flags = _count_flags(&revealed);
+                not_mines += flood_fill(x, y, play_area, &revealed);
+                flags = count_flags(&revealed);
             }
             else
             {
@@ -135,14 +135,14 @@ int play(Minefield *play_area)
                 }
                 else
                 {
-                    int result = _quick_reveal(&x, &y, play_area, &revealed);
+                    int result = quick_reveal(&x, &y, play_area, &revealed);
 
                     if (result == -1)
                     {
                         ended = true;
                         std::fill(revealed.begin(), revealed.end(), 0);
-                        _redraw(play_area, &revealed);
-                        _draw_cursor(x, y);
+                        redraw(play_area, &revealed);
+                        draw_cursor(x, y);
                         wattron(stdscr, COLOR_PAIR(WALL_CLR));
                         mvprintw(play_area->height + 1, 2, "GAME OVER");
                         wattroff(stdscr, COLOR_PAIR(WALL_CLR));
@@ -180,7 +180,7 @@ int play(Minefield *play_area)
             ended = true;
             win = 1;
             std::fill(revealed.begin(), revealed.end(), 2);
-            _redraw(play_area, &revealed);
+            redraw(play_area, &revealed);
             wattron(stdscr, COLOR_PAIR(WALL_CLR));
             mvprintw(play_area->height + 1, 2, "YOU WIN!");
             wattroff(stdscr, COLOR_PAIR(WALL_CLR));
@@ -193,7 +193,7 @@ int play(Minefield *play_area)
     return win;
 }
 
-void _redraw(Minefield *play_area, std::vector<int> *revealed)
+void redraw(Minefield *play_area, std::vector<int> *revealed)
 {
     clear();
 
@@ -271,7 +271,7 @@ void _redraw(Minefield *play_area, std::vector<int> *revealed)
     attroff(COLOR_PAIR(WALL_CLR));
 }
 
-void _draw_cursor(int x, int y)
+void draw_cursor(int x, int y)
 {
     attron(COLOR_PAIR(CURS_CLR));
     mvaddch(y + 1, x * 3 + 1, '[');
@@ -279,7 +279,7 @@ void _draw_cursor(int x, int y)
     attroff(COLOR_PAIR(CURS_CLR));
 }
 
-int _flood_fill(int start_x, int start_y, Minefield *play_area, std::vector<int> *revealed)
+int flood_fill(int start_x, int start_y, Minefield *play_area, std::vector<int> *revealed)
 {
     std::deque<std::pair<int, int>> tiles;
     tiles.push_back(std::pair<int, int>(start_x, start_y));
@@ -320,7 +320,7 @@ int _flood_fill(int start_x, int start_y, Minefield *play_area, std::vector<int>
     return count;
 }
 
-int _quick_reveal(int *x, int *y, Minefield *play_area, std::vector<int> *revealed)
+int quick_reveal(int *x, int *y, Minefield *play_area, std::vector<int> *revealed)
 {
     int flags = 0;
     int hint = play_area->field[*x + *y * play_area->width] - '0';
@@ -370,7 +370,7 @@ int _quick_reveal(int *x, int *y, Minefield *play_area, std::vector<int> *reveal
                 }
                 else
                 {
-                    shown += _flood_fill(*x + i, *y + j, play_area, revealed);
+                    shown += flood_fill(*x + i, *y + j, play_area, revealed);
                 }
             }
         }
@@ -379,7 +379,7 @@ int _quick_reveal(int *x, int *y, Minefield *play_area, std::vector<int> *reveal
     return shown;
 }
 
-int _count_flags(std::vector<int> *revealed) {
+int count_flags(std::vector<int> *revealed) {
     int flags = 0;
 
     for (int i : *revealed) {

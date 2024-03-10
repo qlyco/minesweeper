@@ -34,15 +34,12 @@ void generate_hints(Minefield *play_area)
 {
     int digits[] = {' ', '1', '2', '3', '4', '5', '6', '7', '8'};
 
-    int skipped = 0;
-
     for (int y = 0; y < play_area->height; y++)
     {
         for (int x = 0; x < play_area->width; x++)
         {
             if (play_area->field[x + y * play_area->width] == 'X')
             {
-                ++skipped;
                 continue;
             }
 
