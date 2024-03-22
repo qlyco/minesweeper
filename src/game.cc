@@ -48,6 +48,10 @@ int play(Minefield *play_area)
     int win = 0;
 
     bool first_click = true;
+    int frames = 0;
+    int time = 0;
+    
+    nodelay(stdscr, TRUE);
 
     while (!ended)
     {
@@ -56,7 +60,14 @@ int play(Minefield *play_area)
         wattron(stdscr, COLOR_PAIR(WALL_CLR));
         mvprintw(play_area->height + 1, 2, " BOMBS: %-3d | FLAGS: %-3d ", play_area->mines, flags);
         wattroff(stdscr, COLOR_PAIR(WALL_CLR));
-        wrefresh(stdscr);
+        mvprintw(0, 2, " TIME: %ds", time);
+        refresh();
+
+        frames++;
+
+        if (frames % 60 == 0) {
+            time++;
+        }
 
         input = getch();
 
@@ -119,6 +130,7 @@ int play(Minefield *play_area)
                 wattroff(stdscr, COLOR_PAIR(WALL_CLR));
 
                 wrefresh(stdscr);
+                nodelay(stdscr, FALSE);
                 getch();
             }
             else if (play_area->field[x + y * play_area->width] == ' ')
@@ -148,6 +160,7 @@ int play(Minefield *play_area)
                         wattroff(stdscr, COLOR_PAIR(WALL_CLR));
                         
                         wrefresh(stdscr);
+                        nodelay(stdscr, FALSE);
                         getch();
                     } else {
                         not_mines += result;
@@ -186,8 +199,11 @@ int play(Minefield *play_area)
             wattroff(stdscr, COLOR_PAIR(WALL_CLR));
 
             wrefresh(stdscr);
+            nodelay(stdscr, FALSE);
             getch();
         }
+        
+        napms(1000 / 60);
     }
 
     return win;
