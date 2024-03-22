@@ -8,7 +8,7 @@ build-win:
 
 build-linux:
 	@mkdir -p bin
-	@g++ -Wall -g -Wextra -Werror -pedantic -s -O ./src/*.cc -lncurses -ltinfo -o bin/minesweeper
+	@g++ -Wall -g -Wextra -Werror -pedantic -s -O ./src/*.cc -lncursesw -ltinfo -o bin/minesweeper
 
 compile:
 	@mkdir -p bin

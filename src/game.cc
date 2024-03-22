@@ -1,5 +1,5 @@
 #ifndef TARGET_WIN32
-#include <ncurses.h>
+#include <ncursesw/curses.h>
 #endif
 
 #ifdef TARGET_WIN32
@@ -54,7 +54,7 @@ int play(Minefield *play_area)
         redraw(play_area, &revealed);
         draw_cursor(x, y);
         wattron(stdscr, COLOR_PAIR(WALL_CLR));
-        mvprintw(play_area->height + 1, 2, "BOMBS: %-3d | FLAGS: %-3d", play_area->mines, flags);
+        mvprintw(play_area->height + 1, 2, " BOMBS: %-3d | FLAGS: %-3d ", play_area->mines, flags);
         wattroff(stdscr, COLOR_PAIR(WALL_CLR));
         wrefresh(stdscr);
 
@@ -115,7 +115,7 @@ int play(Minefield *play_area)
                 redraw(play_area, &revealed);
                 draw_cursor(x, y);
                 wattron(stdscr, COLOR_PAIR(WALL_CLR));
-                mvprintw(play_area->height + 1, 2, "GAME OVER");
+                mvprintw(play_area->height + 1, 2, " GAME OVER ");
                 wattroff(stdscr, COLOR_PAIR(WALL_CLR));
 
                 wrefresh(stdscr);
@@ -144,7 +144,7 @@ int play(Minefield *play_area)
                         redraw(play_area, &revealed);
                         draw_cursor(x, y);
                         wattron(stdscr, COLOR_PAIR(WALL_CLR));
-                        mvprintw(play_area->height + 1, 2, "GAME OVER");
+                        mvprintw(play_area->height + 1, 2, " GAME OVER ");
                         wattroff(stdscr, COLOR_PAIR(WALL_CLR));
                         
                         wrefresh(stdscr);
@@ -182,7 +182,7 @@ int play(Minefield *play_area)
             std::fill(revealed.begin(), revealed.end(), 2);
             redraw(play_area, &revealed);
             wattron(stdscr, COLOR_PAIR(WALL_CLR));
-            mvprintw(play_area->height + 1, 2, "YOU WIN!");
+            mvprintw(play_area->height + 1, 2, " YOU WIN! ");
             wattroff(stdscr, COLOR_PAIR(WALL_CLR));
 
             wrefresh(stdscr);

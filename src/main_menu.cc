@@ -1,5 +1,5 @@
 #ifndef TARGET_WIN32
-#include <ncurses.h>
+#include <ncursesw/curses.h>
 #endif
 
 #ifdef TARGET_WIN32

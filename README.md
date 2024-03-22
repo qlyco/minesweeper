@@ -21,7 +21,7 @@ Windows build was cross-compiled from Linux.
 
 - [ ] GUI support
 - [ ] Leaderboard / score system
-- [ ] No guesses mode
+- [ ] Daily / Weekly challenges
 - [ ] Refactored / cleaner codebase (current code is too hacky and written in a few hours)
 
 ## Known Issues
@@ -54,3 +54,7 @@ Windows build need to be cross-compiled from Linux and is more complicated. WSL 
 - Make sure ```mingw-w64``` is installed.
 - Run ```make build-win```.
 - Run the built executable in ```bin```.
+
+## License
+
+All code with the exception of the precompiled ```pdcurses``` is licensed under GPLv2.
