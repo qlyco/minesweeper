@@ -56,4 +56,4 @@ Windows build need to be cross-compiled from Linux and is more complicated. WSL 
 
 ## License
 
-All code with the exception of the precompiled ```pdcurses``` is licensed under GPLv2.
+All code with the exception of the precompiled ```pdcurses``` is licensed under GPLv3.
